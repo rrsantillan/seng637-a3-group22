@@ -1,2 +1,3 @@
-# seng637-a3-group22
-SENG 637 Assignment 3 Repo ⁕
+seng637-a3
+
+Read [the assignment guideline](seng637-a3.md) 
