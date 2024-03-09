@@ -12,3 +12,29 @@ Icon
 
 # Thumbnails
 ._*
+
+### Microsoft Office
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# Temporary files often created by Office suite
+*~
+*.tmp
+*.temp
+*.swp
+
+# Thumbnails
+~$*
+
+# Mac files
+.DS_Store
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
