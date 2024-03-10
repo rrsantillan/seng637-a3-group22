@@ -6,6 +6,7 @@ package org.jfree.data;
 
 import org.jfree.data.DataUtilities;
 import org.jfree.data.KeyedValues;
+import org.jfree.data.KeyedValues;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
@@ -25,186 +26,112 @@ public class CalculateCumulativePercentagesTest {
 
     private Mockery mockingContext;
     private KeyedValues data;
+    private DefaultKeyedValues testDKV;
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
     	
     }
     
-    @Before
-    public void setUp() throws Exception {
-    	mockingContext = new Mockery();
-    	data = mockingContext.mock(KeyedValues.class);
-    }
+//    @Before
+//    public void setUp() throws Exception {
+//    	testDKV.clear();
+//    	
+//    }
     
     // Testing for last KeyedValue result to see if it's 100%
     @Test
     public void getCumulativePercentages_SingleKeyAndValue() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(1));
-    		
-    		allowing(data).getKey(0); will(returnValue(0));
-    		allowing(data).getValue(0); will(returnValue(2));
-    	}});
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("0", 5.0);
     	
     	// Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(0).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("0").doubleValue(), 0.00001d);
     }
     
     // Testing for last KeyedValue result to see if it's 100%
     @Test
     public void getCumulativePercentages_SequentialKeysAndValues() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(0));
-    		allowing(data).getValue(0); will(returnValue(2));
-    		allowing(data).getKey(1); will(returnValue(1));
-    		allowing(data).getValue(1); will(returnValue(4));
-    		allowing(data).getKey(2); will(returnValue(2));
-    		allowing(data).getValue(2); will(returnValue(6));
-
-    	}});
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("0", 5.0);
+    	this.testDKV.addValue("1", 6.0);
+    	this.testDKV.addValue("2", 7.0);
     	
     	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("2").doubleValue(), 0.00001d);
     }
     
     // Testing for non sequential keys to see if it's 100%
     @Test
     public void getCumulativePercentages_NonSequentialKeysAndValues() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(3));
-    		allowing(data).getValue(0); will(returnValue(2));
-    		allowing(data).getKey(1); will(returnValue(7));
-    		allowing(data).getValue(1); will(returnValue(4));
-    		allowing(data).getKey(2); will(returnValue(5));
-    		allowing(data).getValue(2); will(returnValue(6));
-
-    	}});
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("3", 2.0);
+    	this.testDKV.addValue("7", 4.0);
+    	this.testDKV.addValue("5", 6.0);
     	
     	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("5").doubleValue(), 0.00001d);
     }
     
     // Testing for last KeyedValue result to see if it's 100% for negative total
     @Test
     public void getCumulativePercentages_NegativeTotal() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(0));
-    		allowing(data).getValue(0); will(returnValue(-50));
-    		allowing(data).getKey(1); will(returnValue(1));
-    		allowing(data).getValue(1); will(returnValue(1));
-    		allowing(data).getKey(2); will(returnValue(2));
-    		allowing(data).getValue(2); will(returnValue(10));
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("0", -50.0);
+    	this.testDKV.addValue("1", 1.0);
+    	this.testDKV.addValue("2", 10.0);
 
-    	}});
-    	
     	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("2").doubleValue(), 0.00001d);
     }
     
     // Testing for last KeyedValue result to see if it's 100% for large total
     @Test
     public void getCumulativePercentages_LargePositiveValue() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(0));
-    		allowing(data).getValue(0); will(returnValue(10000000));
-    		allowing(data).getKey(1); will(returnValue(1));
-    		allowing(data).getValue(1); will(returnValue(4));
-    		allowing(data).getKey(2); will(returnValue(2));
-    		allowing(data).getValue(2); will(returnValue(6));
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("0", 10000000.0);
+    	this.testDKV.addValue("1", 4.0);
+    	this.testDKV.addValue("2", 6.0);
 
-    	}});
-    	
     	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("2").doubleValue(), 0.00001d);
     }
     
-    // Testing for last KeyedValue result for null Value
+    // Testing for KeyedValue result for null Value
     @Test
     public void getCumulativePercentages_OneNullValue() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(0));
-    		allowing(data).getValue(0); will(returnValue(2));
-    		allowing(data).getKey(1); will(returnValue(1));
-    		allowing(data).getValue(1); will(returnValue(null));
-    		allowing(data).getKey(2); will(returnValue(2));
-    		allowing(data).getValue(2); will(returnValue(6));
-
-    	}});
+    	this.testDKV = new DefaultKeyedValues();
+    	this.testDKV.addValue("0", 2.0);
+    	this.testDKV.addValue("1", null);
+    	this.testDKV.addValue("2", 6.0);
     	
     	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
+    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(this.testDKV);
     	
         // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+        assertEquals(1.0, resultingKV.getValue("2").doubleValue(), 0.00001d);
     }
     
-    // Testing for last KeyedValue result for null Key
+ // Testing for null KeyedValues
     @Test(expected = IllegalArgumentException.class)
-    public void getCumulativePercentages_OneNullKey() {
-    	mockingContext.checking(new Expectations() {{
-    		allowing(data).getItemCount();	will(returnValue(3));
-    		
-    		allowing(data).getKey(0); will(returnValue(null));
-    		allowing(data).getValue(0); will(returnValue(2));
-    		allowing(data).getKey(1); will(returnValue(1));
-    		allowing(data).getValue(1); will(returnValue(4));
-    		allowing(data).getKey(2); will(returnValue(2));
-    		allowing(data).getValue(2); will(returnValue(6));
-
-    	}});
-    	
-    	//Exercise
-    	KeyedValues resultingKV = DataUtilities.getCumulativePercentages(data);
-    	
-    	// Verify the interactions
-        mockingContext.assertIsSatisfied();
-    	
-        // Assertion
-        assertEquals(1.0, resultingKV.getValue(2).doubleValue(), 0.00001d);
+    public void getCumulativePercentages_NullKV() {
+    	KeyedValues data = null;
+        DataUtilities.getCumulativePercentages(data);
     }
 
     /**
