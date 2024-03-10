@@ -5,6 +5,8 @@ package org.jfree.data;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.jfree.data.Range;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -76,6 +78,11 @@ public class ExpandToIncludeTest{
     @Test
     public void expandToIncludeAUBInput() {
     	assertEquals("Failed to expand range to include 10.1.", new Range(-10, 10.1), Range.expandToInclude(exampleRange, 10.1));
+    }
+	@Test
+    public void expandToIncludeNullRangeObj() {
+    	double value = 5.0;
+    	assertEquals("Failed to handle null value (should've been Range(value, value).", new Range(value, value), Range.expandToInclude(null, value));
     }
     
 	/**
