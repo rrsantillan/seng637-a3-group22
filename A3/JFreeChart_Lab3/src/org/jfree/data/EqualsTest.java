@@ -56,7 +56,41 @@ public class EqualsTest {
     	Range testRange2 = new Range(-10, 10);
         assertTrue(testRange.equals(testRange2) == testRange2.equals(testRange));
     }
-        
+    
+    // Test case covering equality when lower bounds are different but upper bounds are the same
+    @Test
+    public void testEqualsDifferentLowerBoundSameUpperBound() {
+        Range differentLowerBound = new Range(-5, 10);
+        assertFalse(testRange.equals(differentLowerBound));
+    }
+    
+    // Test case covering equality when upper bounds are different but lower bounds are the same
+    @Test
+    public void testEqualsSameLowerBoundDifferentUpperBound() {
+        Range differentUpperBound = new Range(-10, 5);
+        assertFalse(testRange.equals(differentUpperBound));
+    }
+    
+    // Test case covering equality when both lower and upper bounds are different
+    @Test
+    public void testEqualsDifferentBounds() {
+        Range differentBounds = new Range(-5, 5);
+        assertFalse(testRange.equals(differentBounds));
+    }
+    
+    // Test case covering equality with an object of a different type
+    @Test
+    public void testEqualsWithDifferentType() {
+        Object differentType = new Object();
+        assertFalse(testRange.equals(differentType));
+    }
+    
+    // Test case covering equality with the same instance
+    @Test
+    public void testEqualsSameInstance() {
+        assertTrue(testRange.equals(testRange));
+    }
+    
     @After
     public void tearDown() throws Exception {
     }

@@ -52,33 +52,33 @@ public class CreateNumberArrayTest {
     @Test
     public void testFirstIndex() {
         Number[] result = DataUtilities.createNumberArray(data);
-	if (data.length == 0) {
-        	assertEquals(0, result.length);
-    	} else {
+//	if (data.length == 0) {
+//        	assertEquals(0, result.length);
+//    	} else {
         	assertEquals(data[0], result[0]);
-    	}
+//    	}
     }
  
     // Test to verify that a valid input at the middle index position returns the correct values.
     @Test
     public void testMiddleIndex() {
         Number[] result = DataUtilities.createNumberArray(data);
-	if (data.length == 0) {
-        	assertEquals(0, result.length);
-    	} else {
+//	if (data.length == 0) {
+//        	assertEquals(0, result.length);
+//    	} else {
         	assertEquals(data[data.length / 2], result[result.length / 2]);
-    	}
+//    	}
     }
  
     // Test to verify that a valid input at the last index position returns the correct values.
     @Test
     public void testLastIndex() {
         Number[] result = DataUtilities.createNumberArray(data);
-	if (data.length == 0) {
-		assertEquals(0, result.length);
-    	} else {
+//	if (data.length == 0) {
+//		assertEquals(0, result.length);
+//    	} else {
         	assertEquals(data[data.length - 1], result[result.length - 1]);
-    	}
+//    	}
     }
  
     // Test to verify that a large input returns an array with the correct length.
