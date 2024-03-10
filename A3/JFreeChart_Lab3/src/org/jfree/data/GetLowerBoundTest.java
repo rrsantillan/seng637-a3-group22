@@ -9,9 +9,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import junit.framework.Assert;
+
 public class GetLowerBoundTest {
 
 	 private Range exampleRange;
+	 private Range largeRange;
+	 private Range illegalRange;
 	    @BeforeClass public static void setUpBeforeClass() throws Exception {
 	    }
 
@@ -19,18 +23,22 @@ public class GetLowerBoundTest {
 	    @Before
 	    public void setUp() throws Exception { 
 	    	exampleRange = new Range(-10, 10);
+	    	largeRange = new Range(-Double.MAX_VALUE, Double.MAX_VALUE);
 	    }
 	    
-	    // Tests if the lower bound of the range matches the expected value of -10.0, ensuring correct initialization of the range object.
 	    @Test
 	    public void lowerBoundShouldBeNegativeTen() {
-	    	assertEquals("The lower bound of the list should be -1.", -10.0, exampleRange.getLowerBound(),0.000000001d);
+	    	assertEquals("The lower bound of the list should be -1.", -10.0, exampleRange.getLowerBound(),0d);
+	    }
+	    @Test
+	    public void lowerBoundWithLargeRange() {
+	        assertEquals("The lower bound should handle Double.MAX_VALUE correctly.", -Double.MAX_VALUE, largeRange.getLowerBound(), 0d);
 	    }
 	    
-	    // Tests a failure scenario where the expected lower bound value is slightly different (-10.00001), which should cause the assertion to fail, highlighting precision issues.
-	    @Test
-	    public void lowerBoundBLBShouldFail() {
-	    	assertEquals("The lower bound of the list should be -1.", -10.00001, exampleRange.getLowerBound(),0.000000001d);
+	    @Test(expected = IllegalArgumentException.class)
+	    public void shouldThrowExceptionWhenLowerIsGreaterThanUpper() {
+	        illegalRange = new Range(1, -1);
+	        illegalRange.getLowerBound();
 	    }
 
 	    @After

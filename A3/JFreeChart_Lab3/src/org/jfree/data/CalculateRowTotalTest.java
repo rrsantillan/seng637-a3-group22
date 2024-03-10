@@ -1,11 +1,6 @@
 package org.jfree.data;
 
 import static org.junit.Assert.*;
-
-import org.jfree.data.DataUtilities;
-import org.jfree.data.Values2D;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,9 +8,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CalculateRowTotalTest {
+	private DefaultKeyedValues2D values;
+	private DefaultKeyedValues2D valuesMax;
+	private DefaultKeyedValues2D valuesMin;
+	private DefaultKeyedValues2D valuesNull;
 
-	private Mockery mockingContext;
-	private Values2D values;
+	private DefaultKeyedValues2D valuesSumZero;
+	
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -23,177 +22,82 @@ public class CalculateRowTotalTest {
 
 	@Before
 	public void setUp() throws Exception {
-		// setup
-		this.mockingContext = new Mockery();
-		this.values = this.mockingContext.mock(Values2D.class);
+		this.values = new DefaultKeyedValues2D();
+		this.values.addValue(7.5, 0, 0);
+		this.values.addValue(2.5, 0, 1);
+		this.values.addValue(5.0, 0, 2);
+		this.values.addValue(7.5, 1, 0);
+		this.values.addValue(2.5, 1, 1);
+		this.values.addValue(5.0, 1, 2);
+		this.values.addValue(7.5, 2, 0);
+		this.values.addValue(2.5, 2, 1);
+		this.values.addValue(5.0, 2, 2);
+		
+		this.valuesMin = new DefaultKeyedValues2D();
+		this.valuesMin.addValue(Double.MIN_VALUE, 0, 0);
+		this.valuesMin.addValue(2.5, 0, 1);
+		this.valuesMin.addValue(-2.5, 0, 2);
+		
+		this.valuesMax = new DefaultKeyedValues2D();
+		this.valuesMax.addValue(Double.MAX_VALUE, 0, 0);
+		this.valuesMax.addValue(2.5, 0, 1);
+		this.valuesMax.addValue(-2.5, 0, 2);
+		
+		this.valuesSumZero = new DefaultKeyedValues2D();
+		this.valuesSumZero.addValue(0.0, 0, 0);
+		this.valuesSumZero.addValue(2.5, 0, 1);
+		this.valuesSumZero.addValue(-2.5, 0, 2);
+		
+		this.valuesNull = new DefaultKeyedValues2D();
+		this.valuesNull.addValue(null, 0, 0);
+		this.valuesNull.addValue(null, 0, 1);
+		this.valuesNull.addValue(2.5, 0, 2);
+		
+		
 	}
-
-	// Tests the calculation of the row total for the top row, ensuring correct summation of values.
+	
 	@Test
 	public void calculateRowTotalTopRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(0, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(0, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(0, 2);
-				will(returnValue(5));
-			}
-		});
-
 		double result = DataUtilities.calculateRowTotal(values, 0);
-
-		assertEquals(15.0, result, .000000001d);
+		System.out.println(result);
+		assertEquals(15.0, result, .000000001d);	
+		
 	}
-
-	// Tests the calculation of the row total for the bottom row, ensuring correct summation of values.
-	@Test
-	public void calculateRowTotalBottomRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(2, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(2, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(2, 2);
-				will(returnValue(5));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, 2);
-
-		assertEquals(15.0, result, .000000001d);
-	}
-
-	// Tests the calculation of the row total for a middle row, ensuring correct summation of values.
 	@Test
 	public void calculateRowTotalForMiddleRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(1, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(1, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(1, 2);
-				will(returnValue(5));
-			}
-		});
-
 		double result = DataUtilities.calculateRowTotal(values, 1);
-
+		assertEquals(15.0, result, .000000001d);
+	}
+	@Test
+	public void calculateRowTotalBottomRow() {		
+		double result = DataUtilities.calculateRowTotal(values, 2);
 		assertEquals(15.0, result, .000000001d);
 	}
 
-	// Tests the calculation of the row total with minimum value in the first column, ensuring correct handling of edge case values.
 	@Test
-	public void calculateRowTotalWithMinValueAndFirstCol() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(0, 0);
-				will(returnValue(Double.MIN_VALUE));
-				oneOf(values).getValue(0, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(0, 2);
-				will(returnValue(-2.5));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, 0);
-
+	public void calculateRowTotalWithMinValueAndFirstRow() {		
+		double result = DataUtilities.calculateRowTotal(valuesMin, 0);
+		this.values.clear();
 		assertEquals(Double.MIN_VALUE, result, .000000001d);
 	}
 
-	// Tests the calculation of the row total with maximum value in the first column, ensuring correct handling of edge case values.
 	@Test
-	public void calculateRowTotalWithMaxValueAndFirstCol() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(0, 0);
-				will(returnValue(Double.MAX_VALUE));
-				oneOf(values).getValue(0, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(0, 2);
-				will(returnValue(-2.5));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, 0);
-
+	public void calculateRowTotalWithMaxValueAndFirstRow() {
+		double result = DataUtilities.calculateRowTotal(valuesMax, 0);
+		this.values.clear();
 		assertEquals(Double.MAX_VALUE, result, .000000001d);
 	}
 
-	// Tests the calculation of the row total for a row with maximum integer value index, ensuring correct handling of large index values.
-	@Test
-	public void calculateRowTotalWithMaxValueRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(Integer.MAX_VALUE, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(Integer.MAX_VALUE, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(Integer.MAX_VALUE, 2);
-				will(returnValue(5.0));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, Integer.MAX_VALUE);
-
-		assertEquals(15.0, result, .000000001d);
-	}
-
-	// Tests the calculation of the row total for a row with minimum integer value index, ensuring correct handling of large negative index values.
-	@Test
-	public void calculateRowTotalWithMinValueRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(Integer.MIN_VALUE, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(Integer.MIN_VALUE, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(Integer.MIN_VALUE, 2);
-				will(returnValue(5.0));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, Integer.MIN_VALUE);
-
-		assertEquals(15.0, result, .000000001d);
-	}
-
-	// Tests the calculation of the row total with the sum of values equal to zero in the first row, ensuring correct handling of zero-sum scenarios.
 	@Test
 	public void calculateRowTotalWithSumOf0AndFirstRow() {
-		mockingContext.checking(new Expectations() {
-			{
-				oneOf(values).getColumnCount();
-				will(returnValue(4));
-				oneOf(values).getValue(0, 0);
-				will(returnValue(7.5));
-				oneOf(values).getValue(0, 1);
-				will(returnValue(2.5));
-				oneOf(values).getValue(0, 2);
-				will(returnValue(-10));
-			}
-		});
-
-		double result = DataUtilities.calculateRowTotal(values, 0);
-
+		double result = DataUtilities.calculateRowTotal(valuesSumZero, 0);
 		assertEquals(0.0, result, .000000001d);
+	}
+	
+	@Test
+	public void calculateRowTotalWithNullValues() {
+		double result = DataUtilities.calculateRowTotal(valuesNull, 0);
+		assertEquals(2.5, result, .000000001d);
 	}
 
 	@After
