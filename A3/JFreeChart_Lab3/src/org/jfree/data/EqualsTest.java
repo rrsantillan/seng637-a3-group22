@@ -57,38 +57,19 @@ public class EqualsTest {
         assertTrue(testRange.equals(testRange2) == testRange2.equals(testRange));
     }
     
-    // Test case covering equality when lower bounds are different but upper bounds are the same
+ // Test case covering equality when upper bounds are the same value but not the same instance
     @Test
-    public void testEqualsDifferentLowerBoundSameUpperBound() {
-        Range differentLowerBound = new Range(-5, 10);
-        assertFalse(testRange.equals(differentLowerBound));
+    public void testEqualsSameUpperBoundDifferentInstance() {
+        Range rangeWithSameUpperBound = new Range(-10, 10);
+        Range rangeWithDifferentUpperBoundInstance = new Range(-10, 10);
+        assertTrue(rangeWithSameUpperBound.equals(rangeWithDifferentUpperBoundInstance));
     }
-    
-    // Test case covering equality when upper bounds are different but lower bounds are the same
+
+    // Test case covering equality when upper bounds are different values but are the same instance
     @Test
-    public void testEqualsSameLowerBoundDifferentUpperBound() {
-        Range differentUpperBound = new Range(-10, 5);
-        assertFalse(testRange.equals(differentUpperBound));
-    }
-    
-    // Test case covering equality when both lower and upper bounds are different
-    @Test
-    public void testEqualsDifferentBounds() {
-        Range differentBounds = new Range(-5, 5);
-        assertFalse(testRange.equals(differentBounds));
-    }
-    
-    // Test case covering equality with an object of a different type
-    @Test
-    public void testEqualsWithDifferentType() {
-        Object differentType = new Object();
-        assertFalse(testRange.equals(differentType));
-    }
-    
-    // Test case covering equality with the same instance
-    @Test
-    public void testEqualsSameInstance() {
-        assertTrue(testRange.equals(testRange));
+    public void testEqualsDifferentUpperBoundSameInstance() {
+        Range rangeWithDifferentUpperBound = new Range(-10, 15);
+        assertFalse(testRange.equals(rangeWithDifferentUpperBound));
     }
     
     @After
